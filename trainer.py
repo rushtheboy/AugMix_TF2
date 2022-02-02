@@ -2,6 +2,7 @@ import os
 import time
 import logging
 import multiprocessing
+from models.mymodel import resnet_v1_eembc_quantized
 import numpy as np
 import config
 
@@ -29,7 +30,25 @@ tf.random.set_seed(seed)
 
 # get the model instance
 print("\nLoading model")
-model = resnet_v1(input_shape=(32, 32, 3), num_classes=10)
+model = resnet_v1_eembc_quantized(input_shape=[32, 32, 3], num_classes=10, l1p=0, l2p=1e-4,
+                              num_filters=[16, 16,  # block 1
+                                           32, 32,  # block 2
+                                           64, 64  # block 3
+                                           ],
+                              kernel_sizes=[3, 3, 3,  # block 1
+                                            3, 3, 1,  # block 2
+                                            3, 3, 1  # block 3
+                                            ],
+                              strides=['111',  # block 1
+                                       '212',  # block 2
+                                       '212',  # block 3
+                                       ],
+                              logit_total_bits=7, logit_int_bits=2, activation_total_bits=7, activation_int_bits=2,
+                              alpha=1, use_stochastic_rounding=False,
+                              logit_quantizer='quantized_bits', activation_quantizer='quantized_relu',
+                              skip=True,
+                              avg_pooling=False,
+                              final_activation=True)
 model.summary()
 print("")
 
