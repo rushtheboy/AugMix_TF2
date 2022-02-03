@@ -5,6 +5,7 @@ import multiprocessing
 from models.mymodel import resnet_v1_eembc_quantized
 import numpy as np
 import config
+import yaml
 
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2" 
 import tensorflow as tf
@@ -25,30 +26,61 @@ seed=1234
 np.random.seed(seed)
 tf.random.set_seed(seed)
 
-
 ###################################################################################
+
+
+def yaml_load(config):
+    with open(config) as stream:
+        param = yaml.safe_load(stream)
+    return param
+
+# get parameters from yaml
+input_shape = [32, 32, 3]
+num_classes = 10
+config = yaml_load('tiny2.yml')
+num_filters = config['model']['filters']
+kernel_sizes = config['model']['kernels']
+strides = config['model']['strides']
+l1p = float(config['model']['l1'])
+l2p = float(config['model']['l2'])
+skip = bool(config['model']['skip'])
+avg_pooling = bool(config['model']['avg_pooling'])
+batch_size = config['fit']['batch_size']
+num_epochs = config['fit']['epochs']
+#verbose = config['fit']['verbose']
+#patience = config['fit']['patience']
+#save_dir = config['save_dir']
+#model_name = config['model']['name']
+#loss = config['fit']['compile']['loss']
+#model_file_path = os.path.join(save_dir, 'model_best.h5')
+
+# quantization parameters
+if 'quantized' in model_name:
+    logit_total_bits = config["quantization"]["logit_total_bits"]
+    logit_int_bits = config["quantization"]["logit_int_bits"]
+    activation_total_bits = config["quantization"]["activation_total_bits"]
+    activation_int_bits = config["quantization"]["activation_int_bits"]
+    alpha = config["quantization"]["alpha"]
+    use_stochastic_rounding = config["quantization"]["use_stochastic_rounding"]
+    logit_quantizer = config["quantization"]["logit_quantizer"]
+    activation_quantizer = config["quantization"]["activation_quantizer"]
+    final_activation = bool(config['model']['final_activation'])
+
+#initial_lr = config['fit']['compile']['initial_lr']
+#lr_decay = config['fit']['compile']['lr_decay']
 
 # get the model instance
 print("\nLoading model")
-model = resnet_v1_eembc_quantized(input_shape=[32, 32, 3], num_classes=10, l1p=0, l2p=1e-4,
-                              num_filters=[16, 16,  # block 1
-                                           32, 32,  # block 2
-                                           64, 64  # block 3
-                                           ],
-                              kernel_sizes=[3, 3, 3,  # block 1
-                                            3, 3, 1,  # block 2
-                                            3, 3, 1  # block 3
-                                            ],
-                              strides=['111',  # block 1
-                                       '212',  # block 2
-                                       '212',  # block 3
-                                       ],
-                              logit_total_bits=7, logit_int_bits=2, activation_total_bits=7, activation_int_bits=2,
-                              alpha=1, use_stochastic_rounding=False,
-                              logit_quantizer='quantized_bits', activation_quantizer='quantized_relu',
-                              skip=True,
-                              avg_pooling=False,
-                              final_activation=True)
+model = resnet_v1_eembc_quantized(input_shape=input_shape, num_classes=num_classes, l1p=l1p, l2p=l2p,
+                              num_filters=num_filters,
+                              kernel_sizes=kernel_sizes,
+                              strides=strides,
+                              logit_total_bits=logit_total_bits, logit_int_bits=logit_int_bits, activation_total_bits=activation_total_bits, activation_int_bits=activation_int_bits,
+                              alpha=alpha, use_stochastic_rounding=use_stochastic_rounding,
+                              logit_quantizer=logit_quantizer, activation_quantizer=activation_quantizer,
+                              skip=skip,
+                              avg_pooling=avg_pooling,
+                              final_activation=final_activation)
 model.summary()
 print("")
 
