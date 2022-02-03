@@ -50,7 +50,7 @@ num_epochs = config['fit']['epochs']
 #verbose = config['fit']['verbose']
 #patience = config['fit']['patience']
 #save_dir = config['save_dir']
-#model_name = config['model']['name']
+model_name = config['model']['name']
 #loss = config['fit']['compile']['loss']
 #model_file_path = os.path.join(save_dir, 'model_best.h5')
 
