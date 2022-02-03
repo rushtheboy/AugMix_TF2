@@ -38,7 +38,8 @@ def yaml_load(theconfig):
 # get parameters from yaml
 input_shape = [32, 32, 3]
 num_classes = 10
-myconfig = yaml_load(os.path.join(sys.path[0], "tiny2.yml"), "r")
+myconfig = yaml_load(os.path.realpath(
+    os.path.join(os.getcwd(), os.path.dirname('tiny2.yml'))))
 num_filters = myconfig['model']['filters']
 kernel_sizes = myconfig['model']['kernels']
 strides = myconfig['model']['strides']
