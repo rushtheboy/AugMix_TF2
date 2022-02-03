@@ -1,4 +1,5 @@
 import os
+import sys
 import time
 import logging
 import multiprocessing
@@ -37,7 +38,7 @@ def yaml_load(theconfig):
 # get parameters from yaml
 input_shape = [32, 32, 3]
 num_classes = 10
-myconfig = yaml_load(tiny2.yml)
+myconfig = yaml_load(os.path.join(sys.path[0], "tiny2.yml"), "r")
 num_filters = myconfig['model']['filters']
 kernel_sizes = myconfig['model']['kernels']
 strides = myconfig['model']['strides']
