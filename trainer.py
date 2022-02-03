@@ -29,7 +29,7 @@ tf.random.set_seed(seed)
 ###################################################################################
 
 
-def yaml_load(myconfig):
+def yaml_load(theconfig):
     with open(config) as stream:
         param = yaml.safe_load(stream)
     return param
@@ -37,7 +37,7 @@ def yaml_load(myconfig):
 # get parameters from yaml
 input_shape = [32, 32, 3]
 num_classes = 10
-myconfig = yaml_load('tiny2.yml')
+myconfig = yaml_load(tiny2.yml)
 num_filters = myconfig['model']['filters']
 kernel_sizes = myconfig['model']['kernels']
 strides = myconfig['model']['strides']
