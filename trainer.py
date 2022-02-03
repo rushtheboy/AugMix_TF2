@@ -29,7 +29,7 @@ tf.random.set_seed(seed)
 ###################################################################################
 
 
-def yaml_load(config):
+def yaml_load(myconfig):
     with open(config) as stream:
         param = yaml.safe_load(stream)
     return param
@@ -37,34 +37,34 @@ def yaml_load(config):
 # get parameters from yaml
 input_shape = [32, 32, 3]
 num_classes = 10
-config = yaml_load('tiny2.yml')
-num_filters = config['model']['filters']
-kernel_sizes = config['model']['kernels']
-strides = config['model']['strides']
-l1p = float(config['model']['l1'])
-l2p = float(config['model']['l2'])
-skip = bool(config['model']['skip'])
-avg_pooling = bool(config['model']['avg_pooling'])
-batch_size = config['fit']['batch_size']
-num_epochs = config['fit']['epochs']
+myconfig = yaml_load('tiny2.yml')
+num_filters = myconfig['model']['filters']
+kernel_sizes = myconfig['model']['kernels']
+strides = myconfig['model']['strides']
+l1p = float(myconfig['model']['l1'])
+l2p = float(myconfig['model']['l2'])
+skip = bool(myconfig['model']['skip'])
+avg_pooling = bool(myconfig['model']['avg_pooling'])
+batch_size = myconfig['fit']['batch_size']
+num_epochs = myconfig['fit']['epochs']
 #verbose = config['fit']['verbose']
 #patience = config['fit']['patience']
 #save_dir = config['save_dir']
-model_name = config['model']['name']
+model_name = myconfig['model']['name']
 #loss = config['fit']['compile']['loss']
 #model_file_path = os.path.join(save_dir, 'model_best.h5')
 
 # quantization parameters
 if 'quantized' in model_name:
-    logit_total_bits = config["quantization"]["logit_total_bits"]
-    logit_int_bits = config["quantization"]["logit_int_bits"]
-    activation_total_bits = config["quantization"]["activation_total_bits"]
-    activation_int_bits = config["quantization"]["activation_int_bits"]
-    alpha = config["quantization"]["alpha"]
-    use_stochastic_rounding = config["quantization"]["use_stochastic_rounding"]
-    logit_quantizer = config["quantization"]["logit_quantizer"]
-    activation_quantizer = config["quantization"]["activation_quantizer"]
-    final_activation = bool(config['model']['final_activation'])
+    logit_total_bits = myconfig["quantization"]["logit_total_bits"]
+    logit_int_bits = myconfig["quantization"]["logit_int_bits"]
+    activation_total_bits = myconfig["quantization"]["activation_total_bits"]
+    activation_int_bits = myconfig["quantization"]["activation_int_bits"]
+    alpha = myconfig["quantization"]["alpha"]
+    use_stochastic_rounding = myconfig["quantization"]["use_stochastic_rounding"]
+    logit_quantizer = myconfig["quantization"]["logit_quantizer"]
+    activation_quantizer = myconfig["quantization"]["activation_quantizer"]
+    final_activation = bool(myconfig['model']['final_activation'])
 
 #initial_lr = config['fit']['compile']['initial_lr']
 #lr_decay = config['fit']['compile']['lr_decay']
