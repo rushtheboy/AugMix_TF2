@@ -69,7 +69,7 @@ lr_max = config.max_lr
 lr_min = config.min_lr
 
 # earlystopping for custom training loops
-es = CTLEarlyStopping(monitor="val_loss", mode="min", patience=5)
+es = CTLEarlyStopping(monitor="val_loss", mode="min", patience=980)
 
 # history object to plot and save progression in the end
 history = CTLHistory(filename=config.plot_name)
