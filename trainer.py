@@ -30,25 +30,7 @@ tf.random.set_seed(seed)
 
 # get the model instance
 print("\nLoading model")
-model = resnet_v1_eembc_quantized(input_shape=[32, 32, 3], num_classes=10, l1p=0, l2p=1e-4,
-                              num_filters=[32, 4,  # block 1
-                                           32, 32,  # block 2
-                                           #64, 64  # block 3
-                                           ],
-                              kernel_sizes=[1, 4, 4,  # block 1
-                                            4, 4, 4,  # block 2
-                                            #3, 3, 1  # block 3
-                                            ],
-                              strides=['111',  # block 1
-                                       '414',  # block 2
-                                       #'212',  # block 3
-                                       ],
-                              logit_total_bits=8, logit_int_bits=2, activation_total_bits=8, activation_int_bits=2,
-                              alpha=1, use_stochastic_rounding=False,
-                              logit_quantizer='quantized_bits', activation_quantizer='quantized_relu',
-                              skip=False,
-                              avg_pooling=False,
-                              final_activation=True)
+model = resnet_v1(input_shape=(32, 32, 3), num_classes=10)
 model.summary()
 print("")
 
@@ -69,7 +51,7 @@ lr_max = config.max_lr
 lr_min = config.min_lr
 
 # earlystopping for custom training loops
-es = CTLEarlyStopping(monitor="val_loss", mode="min", patience=5)
+es = CTLEarlyStopping(monitor="val_loss", mode="min", patience=100)
 
 # history object to plot and save progression in the end
 history = CTLHistory(filename=config.plot_name)
@@ -136,7 +118,7 @@ def train(training_data,
             batch_size=32, 
             nb_epochs=100,
             min_lr=1e-5,
-            max_lr=1.0,
+            max_lr=0.001,
             save_dir_path=""):
     
 
